@@ -15,6 +15,7 @@ const upload = multer({ storage: multer.memoryStorage() })
 const app = express()
 
 app.use(express.json());
+
 const allowedOrigins = process.env.CORS_ORIGINS?.split(",");
 
 app.use(
@@ -254,6 +255,8 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('✅ MongoDB connected successfully!'))
     .catch(err => console.error('❌ MongoDB connection failed:', err))
 
-app.listen(3000, () => {
-    console.log('Server started on port 3000');
+
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
 })
