@@ -251,12 +251,23 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: "Something went wrong" });
 });
 
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('✅ MongoDB connected successfully!'))
-    .catch(err => console.error('❌ MongoDB connection failed:', err))
-
-
 const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
-})
+async function startServer() {
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            serverSelectionTimeoutMS: 10000,
+        });
+
+        console.log("✅ MongoDB connected");
+
+        app.listen(PORT, () => {
+            console.log(`🚀 Server running on port ${PORT}`);
+        });
+
+    } catch (error) {
+        console.error("❌ MongoDB connection failed", error);
+        process.exit(1); // stop app if DB fails
+    }
+}
+
+startServer();
