@@ -7,13 +7,28 @@ import Document from './models/Document.js';
 import imagekit from './utils/imagekit.js';
 import mongoose from 'mongoose';
 import cors from 'cors';
+
 import { generateHash } from './utils/hashing.js';
+import 'dotenv/config'
 const upload = multer({ storage: multer.memoryStorage() })
 
 const app = express()
 
 app.use(express.json());
-app.use(cors());
+const allowedOrigins = process.env.CORS_ORIGINS?.split(",");
+
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true,
+    })
+);
 
 app.post('/upload', upload.single('file'), async (req, res) => {
     try {
