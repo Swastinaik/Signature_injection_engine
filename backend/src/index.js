@@ -254,9 +254,7 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3000
 async function startServer() {
     try {
-        await mongoose.connect(process.env.MONGO_URI, {
-            serverSelectionTimeoutMS: 10000,
-        });
+        await mongoose.connect(process.env.MONGO_URI);
 
         console.log("✅ MongoDB connected");
 
